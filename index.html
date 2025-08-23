@@ -110,7 +110,7 @@
     const progressElement = document.getElementById('progress');
 
     // Use in-memory storage instead of cookies
-    let savedChecks = {};
+    let savedChecks = JSON.parse(localStorage.getItem('cmiChecklistProgress')) || {};
 
     function updateProgress() {
       const totalItems = items.length;
@@ -129,9 +129,10 @@
         checkbox.checked = savedChecks[index] || false;
 
         checkbox.addEventListener('change', () => {
-          savedChecks[index] = checkbox.checked;
-          updateProgress();
-        });
+        savedChecks[index] = checkbox.checked;
+        localStorage.setItem('cmiChecklistProgress', JSON.stringify(savedChecks));
+        updateProgress();
+      });
 
         const label = document.createElement('label');
         label.htmlFor = checkbox.id;
@@ -145,13 +146,14 @@
       updateProgress();
     }
 
-    function clearChecklist() {
-      if (confirm("Are you sure you want to reset the checklist?")) {
-        savedChecks = {};
-        document.querySelectorAll('input[type=checkbox]').forEach(cb => cb.checked = false);
-        updateProgress();
-      }
-    }
+function clearChecklist() {
+  if (confirm("Are you sure you want to reset the checklist?")) {
+    localStorage.removeItem('cmiChecklistProgress'); // Remove from storage
+    savedChecks = {};
+    document.querySelectorAll('input[type=checkbox]').forEach(cb => cb.checked = false);
+    updateProgress();
+  }
+}
 
     // Initialize the checklist when the page loads
     createChecklist();

@@ -11,6 +11,6 @@ def work(filename):
     return ans
 
 if __name__ == "__main__":
-    filename = "data.txt"  # change to your file name
+    filename = "100Things/data.txt"  # change to your file name
     lines = work(filename)
     print(lines)
